@@ -4,6 +4,7 @@ const { User } = require("../models");
 const { auth } = require("../middlewares");
 const sharp = require("sharp");
 const multer = require("multer");
+const { sendWelcomeEmail, sendGoodbyeEmail } = require("../emails/account");
 
 const upload = multer({
   limits: {
@@ -24,7 +25,7 @@ router.post("/users/signup", async (req, res) => {
   try {
     await user.save();
     const token = await user.generateAuthToken();
-
+    sendWelcomeEmail(user.email, user.name);
     res.status(201).send({ user, token });
   } catch (error) {
     res.status("400").send(error);
@@ -74,6 +75,7 @@ router.patch("/users/me", auth, async (req, res) => {
 router.delete("/users/me", auth, async (req, res) => {
   try {
     await req.user.remove();
+    sendGoodbyeEmail(req.user.email, req.user.name);
     res.send(req.user);
   } catch (error) {
     res.status(500).send(error);
@@ -135,7 +137,6 @@ router.post("/users/login", async (req, res) => {
 router.post("/users/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((t) => t.token !== req.token);
-
     await req.user.save();
     res.send("logouted");
   } catch (error) {
