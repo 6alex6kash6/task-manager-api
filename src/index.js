@@ -7,8 +7,11 @@ const { userRouter, taskRouter } = require("./routers");
 
 const port = process.env.PORT;
 
-console.log("hello");
+function sum(a, b) {
+  return a + b;
+}
 
+console.log(sum(2, 3));
 app.use(express.json());
 app.use(cors());
 
@@ -18,3 +21,7 @@ app.use(taskRouter);
 app.listen(port, () =>
   console.log(`Example app listening on port port ${port}`)
 );
+
+// git add
+// git commit -m 'flag: add console log to file' <-
+// git push origin master
