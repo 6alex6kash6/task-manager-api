@@ -7,6 +7,8 @@ const { userRouter, taskRouter } = require("./routers");
 
 const port = process.env.PORT;
 
+console.log("hello");
+
 app.use(express.json());
 app.use(cors());
 
